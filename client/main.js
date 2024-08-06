@@ -3,8 +3,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import * as Objects from './runtime.js'
 
-
+document.getElementById('resetButton').addEventListener('click', resetScene);
 let scene, camera, renderer, controls, clock, stats;
+
 
 //Create Scene. 
 function init(){
@@ -12,7 +13,8 @@ function init(){
     //Create Visuals
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    camera.position.z = 10;
+    camera.position.y = 5;
+    camera.position.z = 5;
 
     renderer = new THREE.WebGLRenderer();
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -51,16 +53,19 @@ renderer.setAnimationLoop( animate );
 
 // Render loop
 function animate() {
-
-    const delta = clock.getDelta();
-
+    const delta = Math.max(0.00001,clock.getDelta());
 	//group.rotation.y += 0.25 * delta;
-    Objects.updateObjects();
+    Objects.updateObjects( delta);
 
-    controls.update( clock.getDelta() );
+    controls.update( delta );
     stats.update();
     renderer.render(scene, camera);
 }
+function resetScene() {
+    console.log("Resetting");
+    Objects.resetObjects();
+    Objects.initialiseObjects();
+  }
 
 
 // Resize handling
@@ -71,6 +76,7 @@ window.addEventListener('resize', function() {
     
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
 
 try {
     init();
