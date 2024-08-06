@@ -47,6 +47,7 @@ function resetObjects(){
     lights = new THREE.Group();
 
     console.log("Resset");
+    initialiseObjects();
 }
 
 // Child function
@@ -60,7 +61,9 @@ function initialiseObjects() {
             new THREE.MeshStandardMaterial({ color: 0xffff00 }),
             new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5)),
             new CANNON.Body({ 
-                mass: 1,
+                mass: 50,
+                linearDamping: 0.1, // Add linear damping to prevent excessive velocity
+                angularDamping: 0.1  // Add angular damping to prevent excessive spinning
              }),
         );
         
@@ -76,7 +79,7 @@ function initialiseObjects() {
             new THREE.MeshStandardMaterial({ color: 0xff0000 }),
             new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5)),
             new CANNON.Body({ 
-                mass: 5,
+                mass: 1,
              }),
         );
         
@@ -120,6 +123,13 @@ function updateObjects(delta){
     for (let i = 0; i < blocks.length; i++) {
         // code block to be executed
         blocks[i].update();
+        if (blocks[i].getPosition().y < -5){
+            if(blocks[i] == ctr.object){
+                resetObjects()
+            } else{
+                blocks[i].resetCanvas(group, world)
+            }
+        }
     }
     
       ctr.operate(controls, Math.max(delta,0.00001));

@@ -64,7 +64,6 @@ function animate() {
 function resetScene() {
     console.log("Resetting");
     Objects.resetObjects();
-    Objects.initialiseObjects();
   }
 
 
